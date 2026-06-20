@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { supabase } from '../lib/supabase';
 import { useFocusEffect } from '@react-navigation/native';
 import { loadSessions, Session } from '../lib/sessions';
 import { useSpeed } from '../lib/SpeedContext';
@@ -259,6 +260,18 @@ export default function StatsScreen() {
       {/* Section 2: Settings */}
       <Text style={[styles.sectionTitle, styles.settingsTitle]}>Settings</Text>
 
+      <Pressable
+        style={styles.signOutBtn}
+        onPress={() =>
+          Alert.alert('Sign out', 'Are you sure?', [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Sign out', style: 'destructive', onPress: () => supabase.auth.signOut() },
+          ])
+        }
+      >
+        <Text style={styles.signOutText}>Sign Out</Text>
+      </Pressable>
+
       <View style={styles.settingsCard}>
         {/* Toggle row */}
         <View style={styles.settingRow}>
@@ -508,5 +521,19 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '300',
     color: '#888',
+  },
+  signOutBtn: {
+    marginBottom: 16,
+    paddingVertical: 13,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#FFCCCC',
+    backgroundColor: '#FFF5F5',
+    alignItems: 'center',
+  },
+  signOutText: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#CC4444',
   },
 });
